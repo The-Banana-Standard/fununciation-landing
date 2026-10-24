@@ -1,0 +1,207 @@
+---
+import { Image } from 'astro:assets';
+import AppStoreButton from './AppStoreButton.astro';
+import basketball from '../assets/games/basketball.png';
+import firefly from '../assets/games/firefly.png';
+import photoBooth from '../assets/games/photo-booth.png';
+import dress from '../assets/games/dress.png';
+
+// Painted in this order, behind the price box. Positions live in the CSS below.
+const shots = [
+  { src: basketball, name: 'basketball' },
+  { src: firefly, name: 'firefly' },
+  { src: photoBooth, name: 'photo-booth' },
+  { src: dress, name: 'dress' },
+];
+---
+
+<section class="closing" aria-labelledby="closing-title">
+  <div class="closing-head">
+    <h2 id="closing-title" class="display lean">Ready for the next round?</h2>
+  </div>
+  <div class="scatter">
+    {
+      shots.map((shot) => (
+        <div class:list={['shot', `shot--${shot.name}`]} aria-hidden="true">
+          <Image src={shot.src} alt="" widths={[320, 640]} sizes="(max-width: 767px) 160px, 280px" />
+        </div>
+      ))
+    }
+    <div class="price-box">
+      <div class="price">$49.99</div>
+      <p class="price-note">Once. No subscription.</p>
+      <div class="price-cta"><AppStoreButton size="price" /></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .closing-head {
+    padding-top: 96px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .closing-head h2 {
+    font-size: clamp(44px, 4.375vw, 56px);
+    line-height: 1.04;
+    text-align: center;
+  }
+
+  .scatter {
+    position: relative;
+    box-sizing: border-box;
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 120px var(--gutter);
+    overflow: hidden;
+  }
+
+  /* Sizes and horizontal offsets are the 1280px design values; below 1280 they shrink with the
+     viewport so the screenshots stay tucked behind the 622px price box instead of crowding it. */
+  .shot {
+    position: absolute;
+    border: 3px solid var(--ink-navy);
+    border-radius: 22px;
+    overflow: hidden;
+    transform: rotate(var(--turn));
+  }
+
+  .shot img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .shot--basketball {
+    --turn: -7deg;
+    left: min(70px, 5.47vw);
+    top: 70px;
+    width: min(280px, 21.875vw);
+  }
+
+  .shot--firefly {
+    --turn: 6deg;
+    right: min(70px, 5.47vw);
+    top: 90px;
+    width: min(280px, 21.875vw);
+  }
+
+  .shot--photo-booth {
+    --turn: 5deg;
+    left: min(150px, 11.72vw);
+    bottom: 60px;
+    width: min(260px, 20.3vw);
+  }
+
+  .shot--dress {
+    --turn: -5deg;
+    right: min(150px, 11.72vw);
+    bottom: 50px;
+    width: min(260px, 20.3vw);
+  }
+
+  .price-box {
+    position: relative;
+    box-sizing: border-box;
+    width: 622px;
+    max-width: 100%;
+    margin: 0 auto;
+    background: var(--cream-surface);
+    border: 3px solid var(--ink-navy);
+    border-radius: 36px;
+    padding: 52px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .price {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 80px;
+    line-height: 1;
+  }
+
+  .price-note {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--ink-navy-2);
+  }
+
+  .price-cta {
+    margin-top: 14px;
+  }
+
+  /* In the desktop prototype this button is an inline span, so its 18px vertical padding spills
+     out of the line box instead of adding height. The negative margin keeps that rendered spacing. */
+  @media (min-width: 768px) {
+    .price-cta :global(.cta) {
+      margin: -18px 0;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .closing-head {
+      padding: 72px 20px 0;
+    }
+
+    .closing-head h2 {
+      font-size: 36px;
+      line-height: 1.06;
+    }
+
+    .scatter {
+      padding: 100px 20px 110px;
+    }
+
+    .shot {
+      border-radius: 16px;
+    }
+
+    .shot--basketball {
+      left: -10px;
+      top: 20px;
+      width: 160px;
+    }
+
+    .shot--firefly {
+      right: -10px;
+      top: 34px;
+      width: 160px;
+    }
+
+    .shot--photo-booth {
+      left: 10px;
+      bottom: 24px;
+      width: 150px;
+    }
+
+    .shot--dress {
+      right: 10px;
+      bottom: 18px;
+      width: 150px;
+    }
+
+    .price-box {
+      width: auto;
+      border-radius: 30px;
+      padding: 36px 20px;
+      gap: 12px;
+    }
+
+    .price {
+      font-size: 64px;
+    }
+
+    .price-note {
+      font-size: 17px;
+    }
+  }
+</style>

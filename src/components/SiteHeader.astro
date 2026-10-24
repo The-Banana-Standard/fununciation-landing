@@ -1,0 +1,184 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.png';
+import { PRIVACY_URL } from '../config';
+import { withBase } from '../paths';
+
+interface Props {
+  current: 'home' | 'story' | 'contact';
+}
+
+const { current } = Astro.props;
+const links = [
+  { label: 'Our Story', href: withBase('/our-story/'), active: current === 'story' },
+  { label: 'Privacy', href: PRIVACY_URL, active: false },
+  { label: 'Contact', href: withBase('/contact/'), active: current === 'contact' },
+];
+---
+
+<header class="site-header">
+  <div class="bar">
+    <a href={withBase('/')} class="logo-link">
+      <Image src={logo} alt="FUNunciation home" class="logo" loading="eager" />
+    </a>
+    <nav class="nav" aria-label="Main">
+      {
+        links.map((link) => (
+          <a href={link.href} class:list={['nav-link', { 'is-current': link.active }]} aria-current={link.active ? 'page' : undefined}>
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Main" hidden>
+    {
+      links.map((link) => (
+        <a href={link.href} aria-current={link.active ? 'page' : undefined}>
+          {link.label}
+        </a>
+      ))
+    }
+  </nav>
+</header>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.menu-button');
+  const menu = document.getElementById('mobile-menu');
+
+  if (button && menu) {
+    const setOpen = (open: boolean) => {
+      button.setAttribute('aria-expanded', String(open));
+      menu.hidden = !open;
+    };
+
+    button.addEventListener('click', () => setOpen(menu.hidden));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !menu.hidden) {
+        setOpen(false);
+        button.focus();
+      }
+    });
+  }
+</script>
+
+<style>
+  .bar {
+    box-sizing: border-box;
+    max-width: var(--content-max);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 28px var(--gutter);
+  }
+
+  .logo-link {
+    display: block;
+  }
+
+  .logo {
+    display: block;
+    height: 72px;
+    width: auto;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    font-weight: 700;
+    font-size: 17px;
+  }
+
+  .nav-link {
+    text-decoration: none;
+    color: var(--ink-navy-2);
+  }
+
+  .nav-link.is-current {
+    color: var(--ink-navy);
+    font-weight: 800;
+    border-bottom: 2px solid var(--ink-navy);
+    padding-bottom: 2px;
+  }
+
+  .nav-link:hover {
+    color: var(--link-hover);
+  }
+
+  .menu-button,
+  .mobile-menu {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    .bar {
+      gap: 0;
+      padding: 18px 20px;
+    }
+
+    .logo {
+      height: 44px;
+    }
+
+    .nav {
+      display: none;
+    }
+
+    .menu-button {
+      box-sizing: content-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border-radius: 50%;
+      background: var(--cream-surface);
+      border: 1.5px solid var(--line);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .menu-button span {
+      width: 20px;
+      height: 2.5px;
+      border-radius: 2px;
+      background: var(--ink-navy);
+    }
+
+    .mobile-menu {
+      display: flex;
+      flex-direction: column;
+      margin: 0 20px 8px;
+      background: var(--cream-surface);
+      border: 1.5px solid var(--line);
+      border-radius: 24px;
+      padding: 8px 20px;
+    }
+
+    .mobile-menu[hidden] {
+      display: none;
+    }
+
+    .mobile-menu a {
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 18px;
+      padding: 14px 0;
+      border-bottom: 1.5px solid var(--line-divider);
+    }
+
+    .mobile-menu a:last-child {
+      border-bottom: 0;
+    }
+  }
+</style>

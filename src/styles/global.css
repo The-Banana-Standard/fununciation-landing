@@ -1,0 +1,127 @@
+/* Design tokens from the app's design system (speech-therapy-app/docs/styling-guide.md).
+   Text is never black, backgrounds are never white (except behind screenshots),
+   and coral is used only on the App Store button. */
+:root {
+  --blush-field: #FBF2EE;
+  --cream-surface: #FFF9F4;
+  --ink-navy: #1F3247;
+  --ink-navy-2: #4A5B70;
+  --story-ink: #3A4B60;
+  --line-hairline: #EBD9CF;
+  --line: #E3CDC1;
+  --line-divider: #F0E2DA;
+  --card-shadow: #F2C3BA;
+  --accent-start: #E2786B;
+  --accent-start-edge: #B9584C;
+  --lavender-tint: #F1ECF6;
+  --lavender-ink: #574A7E;
+  --peach-panel: #F6E6DC;
+  --slate-pale: #DCE5EE;
+  --link-hover: #8E4552;
+
+  --font-display: 'Grandstander Variable', Grandstander, 'Nunito Variable', system-ui, sans-serif;
+  --font-body: 'Nunito Variable', Nunito, system-ui, sans-serif;
+
+  /* Side padding. Home uses a fixed 64px; Our Story overrides it with a fluid value. */
+  --gutter: 64px;
+  --content-max: 1280px;
+
+  color-scheme: light;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --gutter: 20px;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--blush-field);
+  font-family: var(--font-body);
+  color: var(--ink-navy);
+}
+
+a {
+  color: var(--ink-navy);
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink-navy);
+  outline-offset: 3px;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* Shared pieces used on more than one page. */
+
+.page {
+  min-height: 100vh;
+}
+
+.wrap {
+  box-sizing: border-box;
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+
+.eyebrow {
+  margin: 0;
+  font-weight: 900;
+  font-size: 13px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-navy-2);
+}
+
+.band {
+  background: var(--cream-surface);
+  border-top: 1.5px solid var(--line-hairline);
+  border-bottom: 1.5px solid var(--line-hairline);
+}
+
+.display {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.lean {
+  transform: rotate(-1.5deg);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 767px) {
+  .eyebrow {
+    font-size: 12px;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0s !important;
+  }
+}

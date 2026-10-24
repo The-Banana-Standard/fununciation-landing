@@ -1,0 +1,227 @@
+---
+import Base from '../layouts/Base.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import StoryPhoto from '../components/StoryPhoto.astro';
+
+// All copy on this page is verbatim from the owner. Do not edit it.
+// TODO before launch: add the two photos (pass `src` to each StoryPhoto) and confirm the last
+// line of the lavender band, which still says "Say Then Play".
+---
+
+<Base
+  page="story"
+  title="Our Story · FUNunciation"
+  description="How speech-language pathologist Taylor Nizich set out to make articulation practice feel like play, and how FUNunciation was born."
+>
+  <section class="intro">
+    <div class="intro-copy">
+      <p class="eyebrow">Our Story</p>
+      <h1 class="display intro-title">Because “One More Time!” Should Be a Good Thing.</h1>
+    </div>
+    <StoryPhoto shape="portrait" alt="Taylor at work" />
+  </section>
+
+  <section class="band">
+    <div class="prose">
+      <p>Taylor Nizich is a speech-language pathologist with over 10 years of experience working with kids across hospitals, private practices, schools, telehealth, and in-home settings. She’s a big believer in play-based therapy, because who says working on speech goals can't be fun?</p>
+      <p>Over the years, Taylor noticed something: kids were much more willing to practice their speech sounds when the experience felt like play. And let's be honest—today's kids know their way around an app just as well as they know their favorite toys.</p>
+      <p>Meanwhile, SLPs know the drill. You've got speech sound targets to hit, data to collect, and a kid who may or may not be thrilled about saying “rabbit” for the fifteenth time.</p>
+      <p>So Taylor started wondering: What if articulation practice could feel less like drilling and more like playing a game? What if kids could work on their speech sounds while actually wanting to take another turn?</p>
+      <p class="callout">Sounds like a win-win, right?</p>
+    </div>
+  </section>
+
+  <section class="jake" aria-labelledby="jake-title">
+    <StoryPhoto shape="landscape" alt="Taylor and Jake" />
+    <div class="jake-copy">
+      <h2 id="jake-title" class="display story-h2">Enter Jake (and a Slightly Ambitious Idea)</h2>
+      <p>Taylor took her idea to Jake, her husband's best friend and a clever coder, to see if he'd be willing to turn her vision into a real, working app.</p>
+      <p>Luckily, he was up for the challenge.</p>
+      <p>Jake took Taylor's clinical idea and ran with it, coming back with a concept that blew her away. What started as a “Hey, what if we made an app for this?” conversation quickly turned into something much bigger: an opportunity to make articulation practice more engaging for kids and more practical for the clinicians working with them.</p>
+      <p class="callout">And so, Fununciation was born.</p>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="cards-title">
+    <div class="prose">
+      <h2 id="cards-title" class="display story-h2">Less “Let's Do These Cards Again.” More “Can We Play That Again?”</h2>
+      <p>Let's face it: flashcards have their place, but even the best cards can get a little stale. And sometimes, keeping a child motivated takes almost as much creativity as the therapy itself.</p>
+      <p>Fununciation brings speech sound practice into a variety of games, with targets for every phoneme across word positions. Kids get to play, clinicians get to target their goals, and everyone gets a little more variety in the session.</p>
+      <p>There's a practical side, too. Fununciation makes it easy to track correct, incorrect, and close productions without interrupting the flow of therapy to wrestle with data collection. More time for skilled intervention, less time getting bogged down in the paperwork side of things.</p>
+      <p>And the best part? Taylor has already been using Fununciation with her own patients—and they've started requesting it again and again.</p>
+    </div>
+  </section>
+
+  <section class="pull">
+    <p class="display lean pull-quote">We'll take “Can we play that again?” over “Do we have to do more cards?” any day.</p>
+  </section>
+
+  <section class="lavender" aria-labelledby="game-on-title">
+    <div class="prose">
+      <h2 id="game-on-title" class="display story-h2">Speech Goals. Game On.</h2>
+      <p>At the heart of Fununciation is a pretty simple idea: children can work hard, make meaningful progress, and have fun doing it.</p>
+      <p>We're not here to replace the clinical expertise SLPs bring to the table. We're here to give them another tool to make speech practice more engaging, flexible, and enjoyable—for the kids and the clinicians alike.</p>
+      <p>Because therapy can be purposeful and playful. Data collection doesn't have to derail the fun. And maybe, just maybe, practicing “rabbit” for the fifteenth time doesn't have to feel like the fifteenth time.</p>
+      <p class="callout callout--last">Welcome to Say Then Play. Let's make those speech goals a little more fun.</p>
+    </div>
+  </section>
+
+  <ClosingCta />
+</Base>
+
+<style>
+  :global([data-page='story']) {
+    --gutter: clamp(24px, 5vw, 64px);
+  }
+
+  @media (max-width: 767px) {
+    :global([data-page='story']) {
+      --gutter: 20px;
+    }
+  }
+
+  .intro,
+  .jake {
+    max-width: 1152px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: 56px;
+  }
+
+  .intro {
+    padding: 64px var(--gutter) 88px;
+    align-items: center;
+  }
+
+  .intro-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .intro-title {
+    font-size: clamp(44px, 6vw, 68px);
+    line-height: 1.04;
+    transform: rotate(-1.5deg);
+    transform-origin: left;
+    text-wrap: pretty;
+  }
+
+  .prose,
+  .jake-copy {
+    font-size: 20px;
+    line-height: 1.65;
+    font-weight: 600;
+    color: var(--story-ink);
+  }
+
+  .prose {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 88px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .prose p,
+  .jake-copy p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .story-h2 {
+    font-size: clamp(34px, 4vw, 44px);
+    line-height: 1.08;
+    color: var(--ink-navy);
+  }
+
+  .prose .story-h2 {
+    margin-bottom: 8px;
+  }
+
+  .prose .callout,
+  .jake-copy .callout {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 28px;
+    line-height: 1.2;
+    color: var(--ink-navy);
+    text-wrap: wrap;
+  }
+
+  .prose .callout--last {
+    line-height: 1.25;
+  }
+
+  .jake {
+    padding: 96px var(--gutter);
+    align-items: start;
+  }
+
+  .jake-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .pull {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 104px var(--gutter);
+    text-align: center;
+  }
+
+  .pull-quote {
+    font-size: clamp(34px, 4.6vw, 52px);
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+
+  .lavender {
+    background: var(--lavender-tint);
+  }
+
+  /* Same mobile treatment as Home: 20px gutters, tighter vertical rhythm, Home's mobile type sizes. */
+  @media (max-width: 767px) {
+    .intro {
+      padding: 28px 20px 56px;
+      gap: 36px;
+    }
+
+    .intro-title {
+      font-size: 42px;
+      line-height: 1.06;
+    }
+
+    .prose,
+    .jake-copy {
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .prose {
+      padding: 56px 20px;
+      gap: 20px;
+    }
+
+    .jake {
+      padding: 64px 20px;
+      gap: 40px;
+    }
+
+    .jake-copy {
+      gap: 20px;
+    }
+
+    .prose .callout,
+    .jake-copy .callout {
+      font-size: 24px;
+    }
+
+    .pull {
+      padding: 72px 20px;
+    }
+  }
+</style>

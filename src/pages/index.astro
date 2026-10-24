@@ -1,0 +1,633 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import AppStoreButton from '../components/AppStoreButton.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import foodTruck from '../assets/games/food-truck.png';
+import setup from '../assets/setup.png';
+import firefly from '../assets/games/firefly.png';
+import dress from '../assets/games/dress.png';
+
+// TODO before launch: swap these crops for real high-resolution iPad screenshots (same file names).
+const steps = [
+  {
+    image: setup,
+    alt: 'The session setup screen, with sounds, word positions and a game to choose',
+    position: 'top left',
+    title: '1 · You pick the sound',
+    body: 'Choose the sound, the positions and a game. It takes seconds, even with a child already in the chair.',
+  },
+  {
+    image: firefly,
+    alt: 'Firefly Pond: a word card for “bath” beside a frog on a lily pond',
+    position: 'center',
+    title: '2 · The child says the word',
+    body: 'A picture and a word card come up. You judge the production. The app never grades speech and never moves on without you.',
+  },
+  {
+    image: dress,
+    alt: 'Dress the Guests: a guest on stage in a new outfit next to a word card',
+    position: 'center',
+    title: '3 · Every try earns something',
+    body: 'One quick tap, flick or drag. Some tries land, some miss in a silly way, and the child keeps something every time.',
+  },
+];
+
+const clinicalMarks = [
+  { glyph: '✓', label: 'Correct', tone: 'got' },
+  { glyph: '≈', label: 'Close', tone: 'close' },
+  { glyph: '−', label: 'Incorrect', tone: 'miss' },
+];
+
+const friendlyMarks = [
+  { label: 'You got it', tone: 'got' },
+  { label: "You're close", tone: 'close' },
+  { label: 'Try again', tone: 'again' },
+];
+
+const privacyPoints = [
+  'No accounts or sign-in',
+  'Works with no internet',
+  'No ads, no tracking',
+  'Clients saved by nickname or initials',
+];
+---
+
+<Base
+  page="home"
+  title="FUNunciation · Articulation practice for iPad"
+  description="Articulation practice for iPad. Pick a sound, pick a game, press Start. FUNunciation brings the words and the pictures. $49.99 once, no subscription."
+>
+  <section class="wrap hero">
+    <div class="hero-copy">
+      <h1 class="display hero-title">Who says working on speech goals can't be fun?</h1>
+      <p class="hero-lede">Turn “Let's do these cards again.” into “Yes, we can play that again?”</p>
+      <div class="hero-cta">
+        <AppStoreButton size="hero" />
+        <p class="hero-price">$49.99 once.<br class="desktop-only" /> No subscription.</p>
+      </div>
+    </div>
+    <div class="ipad">
+      <Image
+        src={foodTruck}
+        alt="FUNunciation on iPad: the Food Truck game, with a word card for “bath”"
+        widths={[640, 1280]}
+        sizes="(max-width: 767px) 100vw, 600px"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="how-title">
+    <div class="wrap how">
+      <div class="how-head">
+        <p class="eyebrow">How a session works</p>
+        <h2 id="how-title" class="display how-title">Three easy steps</h2>
+      </div>
+      <ol class="steps">
+        {
+          steps.map((step) => (
+            <li class="step">
+              <div class="tile">
+                <Image
+                  src={step.image}
+                  alt={step.alt}
+                  widths={[400, 800]}
+                  sizes="(max-width: 767px) 100vw, 380px"
+                  style={`object-position: ${step.position}`}
+                />
+              </div>
+              <h3 class="display step-title">{step.title}</h3>
+              <p class="step-body">{step.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="wrap progress" aria-labelledby="progress-title">
+    <div class="progress-copy">
+      <p class="eyebrow">Progress tracking</p>
+      <h2 id="progress-title" class="display progress-title">Each child's progress, their way.</h2>
+      <p class="progress-body">
+        Mark each try with one tap, or fill in the report from memory after the round. Results live on your setup screen, never on the game. No red, no green, no failing grade.
+      </p>
+    </div>
+    <div class="marks">
+      <div class="mark-row">
+        {
+          clinicalMarks.map((mark) => (
+            <div class:list={['mark', 'mark--clinical', `tone-${mark.tone}`]}>
+              <div class="mark-glyph" aria-hidden="true">{mark.glyph}</div>
+              {mark.label}
+            </div>
+          ))
+        }
+      </div>
+      <div class="mark-row">
+        {friendlyMarks.map((mark) => <div class:list={['mark', 'mark--friendly', `tone-${mark.tone}`]}>{mark.label}</div>)}
+      </div>
+      <p class="marks-caption">Clinical or child-friendly marks. Marking is off until you turn it on.</p>
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="privacy-title">
+    <div class="privacy">
+      <h2 id="privacy-title" class="display privacy-title">Everything stays on this iPad.</h2>
+      <ul class="privacy-list">
+        {privacyPoints.map((point) => <li>{point}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <ClosingCta />
+</Base>
+
+<style>
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: 56px;
+    align-items: center;
+    padding: 56px var(--gutter) 96px;
+  }
+
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .hero-title {
+    font-size: clamp(48px, 5vw, 64px);
+    line-height: 1.04;
+    letter-spacing: -.01em;
+    transform: rotate(-1.5deg);
+    transform-origin: left;
+    text-wrap: pretty;
+  }
+
+  .hero-lede {
+    margin: 0;
+    font-size: 21px;
+    line-height: 1.5;
+    font-weight: 600;
+    color: var(--ink-navy-2);
+    max-width: 480px;
+    text-wrap: pretty;
+  }
+
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px 24px;
+    margin-top: 8px;
+  }
+
+  .hero-price {
+    margin: 0;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ink-navy-2);
+  }
+
+  .ipad {
+    background: var(--ink-navy);
+    border-radius: 40px;
+    padding: 16px;
+    transform: rotate(1.5deg);
+    box-shadow: 14px 14px 0 var(--card-shadow);
+  }
+
+  .ipad img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 26px;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  /* How a session works */
+  .how {
+    padding: 88px var(--gutter);
+  }
+
+  .how-head {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 56px;
+  }
+
+  .how-title {
+    font-size: clamp(42px, 4.0625vw, 52px);
+    line-height: 1.05;
+  }
+
+  .steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .tile {
+    border: 3px solid var(--ink-navy);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 8px 8px 0 var(--card-shadow);
+    background: #fff;
+  }
+
+  .tile img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .step-title {
+    font-size: 28px;
+    line-height: normal;
+  }
+
+  .step-body {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--ink-navy-2);
+    font-weight: 600;
+  }
+
+  /* Progress tracking */
+  .progress {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 72px;
+    align-items: center;
+    padding: 104px var(--gutter);
+  }
+
+  .progress-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .progress-title {
+    font-size: clamp(42px, 4.0625vw, 52px);
+    line-height: 1.05;
+  }
+
+  .progress-body {
+    margin: 0;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink-navy-2);
+    font-weight: 600;
+    max-width: 480px;
+  }
+
+  /* Mark colours are the app's mark tokens. */
+  .marks {
+    background: var(--cream-surface);
+    border: 1.5px solid var(--line-hairline);
+    border-radius: 32px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .mark-row {
+    display: flex;
+    gap: 12px;
+  }
+
+  .mark {
+    flex: 1;
+    background: var(--mark-bg);
+    border: 1.5px solid var(--mark-line);
+    border-radius: 18px;
+    text-align: center;
+    color: var(--mark-ink);
+  }
+
+  .mark--clinical {
+    padding: 20px 0;
+    font-weight: 900;
+    font-size: 15px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .mark-glyph {
+    font-size: 30px;
+  }
+
+  .mark--friendly {
+    padding: 16px 0;
+    font-weight: 800;
+    font-size: 17px;
+  }
+
+  .tone-got {
+    --mark-bg: #EEF5EA;
+    --mark-line: #CFE0C8;
+    --mark-ink: #3E5A39;
+  }
+
+  .tone-close {
+    --mark-bg: #FDF5E1;
+    --mark-line: #F1DFB2;
+    --mark-ink: #6A4E12;
+  }
+
+  .tone-miss {
+    --mark-bg: #FCEDEB;
+    --mark-line: #F1CFCA;
+    --mark-ink: #8A3A3A;
+  }
+
+  .tone-again {
+    --mark-bg: #EBF3FA;
+    --mark-line: #C9DCEB;
+    --mark-ink: #2D5676;
+  }
+
+  .marks-caption {
+    margin: 0;
+    font-size: 15px;
+    color: var(--ink-navy-2);
+    font-weight: 600;
+  }
+
+  /* Privacy */
+  .privacy {
+    margin: 0 var(--gutter);
+    background: var(--lavender-tint);
+    border-radius: 32px;
+    padding: 56px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: 48px;
+    align-items: center;
+  }
+
+  .privacy-title {
+    font-size: clamp(36px, 3.4375vw, 44px);
+    line-height: 1.08;
+  }
+
+  .privacy-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 32px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--lavender-ink);
+  }
+
+  /* Tablet. Below 1100px the hero button (416px, no wrap) and the marks chips no longer fit their
+     half-width columns, so the two-column blocks stack. The three steps keep their grid. */
+  @media (min-width: 768px) and (max-width: 1099px) {
+    /* Once the copy sits above the iPad, it centres on the page. */
+    .hero {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 48px;
+    }
+
+    .hero-copy {
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero-title {
+      transform-origin: center;
+      text-wrap: balance;
+    }
+
+    .hero-lede {
+      max-width: 560px;
+    }
+
+    .hero-cta {
+      justify-content: center;
+    }
+
+    .hero-price {
+      text-align: left;
+    }
+
+    .ipad {
+      justify-self: center;
+      width: 100%;
+      max-width: 640px;
+      box-sizing: border-box;
+    }
+
+    .progress {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+
+    .progress-body {
+      max-width: 560px;
+    }
+
+    .marks {
+      max-width: 560px;
+    }
+
+    .privacy {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    /* The copy column dissolves so the iPad can sit between the paragraph and the button. */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 22px;
+      padding: 28px 20px 64px;
+    }
+
+    .hero-copy {
+      display: contents;
+    }
+
+    .hero-title {
+      font-size: 42px;
+      line-height: 1.06;
+      letter-spacing: normal;
+      text-align: center;
+      transform-origin: center;
+      text-wrap: balance;
+    }
+
+    .hero-lede {
+      font-size: 18px;
+      max-width: none;
+      text-align: center;
+    }
+
+    .ipad {
+      order: 1;
+      border-radius: 26px;
+      padding: 9px;
+      box-shadow: 8px 8px 0 var(--card-shadow);
+      margin: 10px 6px 10px 0;
+    }
+
+    .ipad img {
+      border-radius: 18px;
+    }
+
+    .hero-cta {
+      order: 2;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      gap: 14px;
+      margin-top: 6px;
+    }
+
+    .hero-price {
+      text-align: center;
+      font-size: 15px;
+    }
+
+    .how {
+      padding: 56px 20px;
+    }
+
+    .how-head {
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+
+    .how-title {
+      font-size: 34px;
+      line-height: 1.08;
+    }
+
+    .steps {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+
+    .step {
+      gap: 14px;
+    }
+
+    /* Mobile reads title, summary, then screenshot. */
+    .tile {
+      order: 1;
+      border-radius: 20px;
+      box-shadow: 6px 6px 0 var(--card-shadow);
+    }
+
+    .step-title {
+      font-size: 24px;
+    }
+
+    .step-body {
+      font-size: 17px;
+    }
+
+    .progress {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+      padding: 64px 20px;
+    }
+
+    .progress-copy {
+      gap: 20px;
+    }
+
+    .progress-title {
+      font-size: 34px;
+      line-height: 1.08;
+    }
+
+    .progress-body {
+      font-size: 17px;
+      max-width: none;
+    }
+
+    .marks {
+      border-radius: 26px;
+      padding: 20px;
+      gap: 12px;
+    }
+
+    .mark-row {
+      gap: 8px;
+    }
+
+    .mark {
+      border-radius: 16px;
+    }
+
+    .mark--clinical {
+      padding: 14px 0;
+      font-size: 11px;
+      letter-spacing: .06em;
+    }
+
+    .mark-glyph {
+      font-size: 24px;
+    }
+
+    .mark--friendly {
+      padding: 12px 0;
+      font-size: 14px;
+    }
+
+    .marks-caption {
+      font-size: 14px;
+    }
+
+    .privacy {
+      margin: 0 20px;
+      border-radius: 28px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 22px;
+    }
+
+    .privacy-title {
+      font-size: 30px;
+      line-height: 1.1;
+    }
+
+    .privacy-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 17px;
+    }
+  }
+</style>

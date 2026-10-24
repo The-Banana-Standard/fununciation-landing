@@ -1,0 +1,86 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Props {
+  /** `portrait` is the 4:5 intro frame; `landscape` is the tilted 4:3 frame. */
+  shape: 'portrait' | 'landscape';
+  /** Describes the photo. Shown on the striped placeholder until `src` is supplied. */
+  alt: string;
+  /** The real photo. Leave unset to show the placeholder from the design. */
+  src?: ImageMetadata;
+}
+
+const { shape, alt, src } = Astro.props;
+---
+
+<div class:list={['photo', `photo--${shape}`, { 'is-placeholder': !src }]}>
+  {
+    src ? (
+      <Image src={src} alt={alt} widths={[600, 1200]} sizes="(max-width: 767px) 100vw, 560px" />
+    ) : (
+      <span class="photo-label" aria-hidden="true">
+        photo: {alt}
+      </span>
+    )
+  }
+</div>
+
+<style>
+  .photo {
+    box-sizing: border-box;
+    border: 3px solid var(--ink-navy);
+    box-shadow: 10px 10px 0 var(--card-shadow);
+    overflow: hidden;
+  }
+
+  .photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .photo--portrait {
+    aspect-ratio: 4 / 5;
+    max-height: 520px;
+    border-radius: 36px;
+    --stripe: var(--peach-panel);
+  }
+
+  .photo--landscape {
+    aspect-ratio: 4 / 3;
+    border-radius: 32px;
+    transform: rotate(-1deg);
+    --stripe: var(--slate-pale);
+  }
+
+  .is-placeholder {
+    background: repeating-linear-gradient(135deg, var(--stripe) 0 14px, var(--cream-surface) 14px 28px);
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+  }
+
+  .photo-label {
+    font: 600 13px ui-monospace, Menlo, monospace;
+    color: var(--ink-navy-2);
+    background: var(--cream-surface);
+    padding: 6px 10px;
+    border-radius: 8px;
+  }
+
+  @media (max-width: 767px) {
+    .photo {
+      box-shadow: 8px 8px 0 var(--card-shadow);
+    }
+
+    .photo--portrait {
+      border-radius: 28px;
+    }
+
+    .photo--landscape {
+      border-radius: 26px;
+    }
+  }
+</style>

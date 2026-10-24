@@ -1,0 +1,68 @@
+---
+import { APP_STORE_URL } from '../config';
+
+interface Props {
+  /** `hero` is the large button beside the headline; `price` sits in the closing price box. */
+  size: 'hero' | 'price';
+}
+
+const { size } = Astro.props;
+---
+
+<a class:list={['cta', `cta--${size}`]} href={APP_STORE_URL}>Download on the App Store <span aria-hidden="true">→</span></a>
+
+<style>
+  /* The one place coral appears on the site. Plain text label until an official badge is supplied. */
+  .cta {
+    --tilt: -1deg;
+    display: inline-block;
+    white-space: nowrap;
+    background: var(--accent-start);
+    box-shadow: 0 6px 0 var(--accent-start-edge);
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-weight: 900;
+    color: var(--ink-navy);
+    text-decoration: none;
+    transform: rotate(var(--tilt));
+    transition:
+      transform 150ms ease-out,
+      box-shadow 150ms ease-out;
+  }
+
+  .cta:hover {
+    color: var(--ink-navy);
+    transform: rotate(var(--tilt)) translateY(2px);
+    box-shadow: 0 4px 0 var(--accent-start-edge);
+  }
+
+  .cta:active {
+    transform: rotate(var(--tilt)) translateY(5px);
+    box-shadow: 0 1px 0 var(--accent-start-edge);
+  }
+
+  .cta--hero {
+    padding: 20px 34px;
+    font-size: 24px;
+  }
+
+  .cta--price {
+    padding: 18px 30px;
+    font-size: 22px;
+  }
+
+  @media (max-width: 767px) {
+    .cta--hero {
+      --tilt: 0deg;
+      display: block;
+      text-align: center;
+      padding: 18px 0;
+      font-size: 21px;
+    }
+
+    .cta--price {
+      padding: 16px 24px;
+      font-size: 19px;
+    }
+  }
+</style>

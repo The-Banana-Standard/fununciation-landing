@@ -1,0 +1,41 @@
+---
+// Self-hosted copies of the same variable font files Google Fonts serves, so text wraps exactly as
+// in the design prototypes without a third-party request.
+import '@fontsource-variable/grandstander';
+import '@fontsource-variable/nunito';
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import { ALLOW_SEARCH_INDEXING } from '../config';
+
+interface Props {
+  title: string;
+  description: string;
+  page: 'home' | 'story' | 'contact';
+}
+
+const { title, description, page } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#FBF2EE" />
+    {!ALLOW_SEARCH_INDEXING && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="FUNunciation" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+  </head>
+  <body>
+    <div class="page" data-page={page}>
+      <SiteHeader current={page} />
+      <main>
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
