@@ -1,0 +1,435 @@
+---
+import type { ImageMetadata } from 'astro';
+import LoopVideo from './LoopVideo.astro';
+
+interface Props {
+  games: { id: string; name: string; how: string; poster: ImageMetadata }[];
+}
+
+const { games } = Astro.props;
+const number = (i: number) => String(i + 1).padStart(2, '0');
+---
+
+<!--
+  The games picker (design handoff "games picker", options 3a / 4a / 4b). Desktop and tablet: a
+  numbered list of every game beside one large clip of the selected one (tabs). Phone: the same list
+  as an accordion that opens to show the game (disclosures). Only one layout is ever displayed, and
+  hidden clips never download (LoopVideo is preload="none" and plays only while on screen).
+-->
+<div class="picker" data-picker>
+  <div class="picker-split">
+    <div class="picker-list">
+      <div class="picker-scroller" data-scroller role="tablist" aria-orientation="vertical" aria-label="The games">
+        {
+          games.map((game, i) => (
+            <button
+              class="pick-row"
+              type="button"
+              role="tab"
+              id={`game-tab-${game.id}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              aria-controls={`game-panel-${game.id}`}
+              tabindex={i === 0 ? 0 : -1}
+              data-tab
+            >
+              <span class="pick-head">
+                <span class="pick-num">{number(i)}</span>
+                <span class="pick-name">{game.name}</span>
+              </span>
+              <span class="pick-how">{game.how}</span>
+            </button>
+          ))
+        }
+      </div>
+    </div>
+    <div class="picker-stage">
+      {
+        games.map((game, i) => (
+          <div class="pick-panel" role="tabpanel" id={`game-panel-${game.id}`} aria-labelledby={`game-tab-${game.id}`} hidden={i !== 0} data-panel>
+            <LoopVideo
+              class="pick-media"
+              src={`/media/games/${game.id}.mp4`}
+              poster={game.poster}
+              alt={`${game.name}, one of the games`}
+              group="games"
+              widths={[640, 1280]}
+              sizes="(max-width: 1099px) 60vw, 720px"
+            />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="picker-accordion">
+    {
+      games.map((game, i) => (
+        <div class:list={['acc-item', { 'is-open': i === 0 }]}>
+          <button
+            class="acc-button"
+            type="button"
+            id={`game-acc-${game.id}`}
+            aria-expanded={i === 0 ? 'true' : 'false'}
+            aria-controls={`game-acc-body-${game.id}`}
+            data-acc
+          >
+            <span class="pick-num">{number(i)}</span>
+            <span class="acc-name">{game.name}</span>
+            <span class="acc-mark" aria-hidden="true">
+              {i === 0 ? '−' : '+'}
+            </span>
+          </button>
+          <div class="acc-body" id={`game-acc-body-${game.id}`} hidden={i !== 0}>
+            <span class="acc-how">{game.how}</span>
+            <LoopVideo
+              class="pick-media"
+              src={`/media/games/${game.id}.mp4`}
+              poster={game.poster}
+              alt={`${game.name}, one of the games`}
+              group="games"
+              widths={[640, 1280]}
+              sizes="100vw"
+            />
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const behavior: ScrollBehavior = reduced ? 'auto' : 'smooth';
+
+  for (const picker of document.querySelectorAll<HTMLElement>('[data-picker]')) {
+    // Desktop and tablet: one tab is always selected, and its panel is the only one shown.
+    const scroller = picker.querySelector<HTMLElement>('[data-scroller]')!;
+    const tabs = [...picker.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+    const panels = [...picker.querySelectorAll<HTMLElement>('[data-panel]')];
+    let active = 0;
+
+    const select = (index: number, focus: boolean) => {
+      active = (index + tabs.length) % tabs.length;
+      tabs.forEach((tab, i) => {
+        tab.setAttribute('aria-selected', String(i === active));
+        tab.tabIndex = i === active ? 0 : -1;
+      });
+      panels.forEach((panel, i) => (panel.hidden = i !== active));
+
+      const row = tabs[active];
+      if (focus) row.focus({ preventScroll: true });
+      if (scroller.scrollHeight > scroller.clientHeight) {
+        // Tablet: the list scrolls inside itself. Centre the row in it without moving the page.
+        scroller.scrollTo({ top: row.offsetTop - (scroller.clientHeight - row.offsetHeight) / 2, behavior });
+      } else if (focus) {
+        row.scrollIntoView({ block: 'nearest', behavior });
+      }
+    };
+
+    tabs.forEach((tab, i) => tab.addEventListener('click', () => select(i, false)));
+    scroller.addEventListener('keydown', (event) => {
+      const moves: Record<string, number> = {
+        ArrowDown: active + 1,
+        ArrowUp: active - 1,
+        Home: 0,
+        End: tabs.length - 1,
+      };
+      if (!(event.key in moves)) return;
+      event.preventDefault();
+      select(moves[event.key], true);
+    });
+
+    // Phone: an accordion. Tapping the open game closes it; tapping another opens it and closes the rest.
+    const toggles = [...picker.querySelectorAll<HTMLButtonElement>('[data-acc]')];
+    toggles.forEach((toggle, i) =>
+      toggle.addEventListener('click', () => {
+        const opening = toggle.getAttribute('aria-expanded') !== 'true';
+        toggles.forEach((other, k) => {
+          const open = opening && k === i;
+          other.setAttribute('aria-expanded', String(open));
+          other.closest('.acc-item')!.classList.toggle('is-open', open);
+          other.querySelector('.acc-mark')!.textContent = open ? '−' : '+';
+          document.getElementById(other.getAttribute('aria-controls')!)!.hidden = !open;
+        });
+        // Closing the game above can pull this one up past the top of the screen; bring it back.
+        if (opening && toggle.getBoundingClientRect().top < 0) toggle.scrollIntoView({ block: 'start', behavior });
+      }),
+    );
+  }
+</script>
+
+<style>
+  /* Desktop (3a): the list on the left, a sticky stage on the right. */
+  .picker-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr);
+    gap: 48px;
+    align-items: start;
+  }
+
+  .picker-list {
+    position: relative;
+    min-height: 0;
+  }
+
+  .picker-scroller {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .pick-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    text-align: left;
+    padding: 9px 16px;
+    border: 0;
+    border-radius: 14px;
+    background: transparent;
+    color: var(--ink-navy);
+    font: inherit;
+    cursor: pointer;
+    transition:
+      background-color 150ms ease-out,
+      color 150ms ease-out;
+  }
+
+  .pick-row[aria-selected='false']:hover {
+    background: var(--cream-surface);
+  }
+
+  .pick-row[aria-selected='true'] {
+    padding: 16px 16px 18px;
+    background: var(--ink-navy);
+    color: var(--cream-surface);
+  }
+
+  .pick-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+
+  .pick-num {
+    flex: none;
+    width: 22px;
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--ink-navy-2);
+    transition: color 150ms ease-out;
+  }
+
+  .pick-row[aria-selected='true'] .pick-num {
+    color: var(--line-divider);
+  }
+
+  .pick-name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 19px;
+  }
+
+  .pick-row[aria-selected='true'] .pick-name {
+    font-size: 26px;
+  }
+
+  .pick-how {
+    display: none;
+    padding-left: 36px;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.45;
+    color: var(--line-divider);
+  }
+
+  .pick-row[aria-selected='true'] .pick-how {
+    display: block;
+  }
+
+  .picker-stage {
+    position: sticky;
+    top: 40px;
+    padding: 0 10px 10px 0;
+  }
+
+  .pick-panel[hidden] {
+    display: none;
+  }
+
+  .picker-stage :global(.pick-media) {
+    aspect-ratio: 4 / 3;
+    border: 3px solid var(--ink-navy);
+    border-radius: 28px;
+    box-shadow: 10px 10px 0 var(--card-shadow);
+    background: #fff;
+  }
+
+  .picker-accordion {
+    display: none;
+  }
+
+  /* Tablet (4a): a tighter list that scrolls inside itself and is never taller than the stage. */
+  @media (min-width: 768px) and (max-width: 1099px) {
+    .picker-split {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .picker-scroller {
+      position: absolute;
+      inset: 0 0 8px 0;
+      overflow-y: auto;
+      gap: 2px;
+      padding: 6px 6px 6px 0;
+      border-top: 1.5px solid var(--line);
+      border-bottom: 1.5px solid var(--line);
+      scrollbar-width: thin;
+      scrollbar-color: var(--line) transparent;
+    }
+
+    .pick-row {
+      padding: 7px 12px;
+      border-radius: 12px;
+    }
+
+    .pick-row[aria-selected='true'] {
+      padding: 12px 12px 14px;
+    }
+
+    .pick-head {
+      gap: 10px;
+    }
+
+    .pick-num {
+      width: 18px;
+      font-size: 11px;
+    }
+
+    .pick-name {
+      font-size: 16px;
+    }
+
+    .pick-row[aria-selected='true'] .pick-name {
+      font-size: 21px;
+    }
+
+    .pick-how {
+      padding-left: 28px;
+      font-size: 14px;
+    }
+
+    .picker-stage {
+      position: static;
+      padding: 0 8px 8px 0;
+    }
+
+    .picker-stage :global(.pick-media) {
+      border-radius: 22px;
+      box-shadow: 8px 8px 0 var(--card-shadow);
+    }
+  }
+
+  /* Phone (4b): an accordion; the open game shows its line and its clip. */
+  @media (max-width: 767px) {
+    .picker-split {
+      display: none;
+    }
+
+    .picker-accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .acc-item {
+      display: flex;
+      flex-direction: column;
+      border-radius: 16px;
+      background: transparent;
+      transition: background-color 150ms ease-out;
+    }
+
+    .acc-item.is-open {
+      background: var(--ink-navy);
+    }
+
+    .acc-button {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      min-height: 48px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 16px;
+      background: transparent;
+      color: var(--ink-navy);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: color 150ms ease-out;
+    }
+
+    .is-open .acc-button {
+      color: var(--cream-surface);
+    }
+
+    .acc-button .pick-num {
+      width: 18px;
+      font-size: 11px;
+    }
+
+    .is-open .pick-num,
+    .is-open .acc-mark {
+      color: var(--line-divider);
+    }
+
+    .acc-name {
+      flex: 1;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 17px;
+    }
+
+    .is-open .acc-name {
+      font-size: 21px;
+    }
+
+    .acc-mark {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--ink-navy-2);
+    }
+
+    .acc-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 0 14px 16px;
+    }
+
+    .acc-body[hidden] {
+      display: none;
+    }
+
+    .acc-how {
+      padding-left: 30px;
+      font-size: 15px;
+      line-height: 1.45;
+      font-weight: 600;
+      color: var(--line-divider);
+    }
+
+    .acc-body :global(.pick-media) {
+      aspect-ratio: 4 / 3;
+      border: 2px solid var(--cream-surface);
+      border-radius: 14px;
+      background: #fff;
+    }
+  }
+</style>

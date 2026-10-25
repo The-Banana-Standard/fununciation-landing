@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Grandstander:wght@700;800;900&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#EFE4DE;font-family:Nunito,system-ui,sans-serif;color:#1F3247}a{color:#1F3247}a:hover{color:#8E4552}</style>
+</helmet>
+<section style="display:flex;flex-wrap:wrap;gap:80px;padding:80px;align-items:flex-start;border-bottom:2px dashed #E3CDC1">
+
+<div id="4a" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-weight:900;font-size:15px;background:#1F3247;color:#FFF9F4;border-radius:999px;padding:6px 14px">4a</span>
+    <span style="font-weight:800;font-size:18px">3a on tablet (834px): same split, tighter list</span>
+  </div>
+  <div style="width:834px;box-sizing:border-box;background:#FBF2EE;padding:80px 64px">
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:40px">
+      <p style="margin:0;font-weight:900;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#4A5B70">The games</p>
+      <h2 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:42px;line-height:1.05">13 games, one routine.</h2>
+      <p style="margin:0;font-size:18px;line-height:1.55;font-weight:600;color:#4A5B70;max-width:600px">Every game runs the same 20-trial round, and the child wins on the last one. Pick a favorite, or switch it up from session to session.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.45fr);gap:28px;align-items:stretch">
+      <div style="position:relative;min-height:0">
+      <div style="position:absolute;inset:0 0 8px 0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#E3CDC1 transparent;padding-right:6px;display:flex;flex-direction:column;gap:2px;border-top:1.5px solid #E3CDC1;border-bottom:1.5px solid #E3CDC1;padding-top:6px;padding-bottom:6px">
+        <sc-for list="{{ list4a }}" as="g" hint-placeholder-count="13">
+          <button onClick="{{ g.select }}" style="display:flex;flex-direction:column;gap:4px;text-align:left;padding:{{ g.pad }};border:0;border-radius:12px;background:{{ g.bg }};color:{{ g.fg }};cursor:pointer;font-family:inherit;transition:background-color 150ms ease-out">
+            <span style="display:flex;align-items:baseline;gap:10px">
+              <span style="font-weight:900;font-size:11px;letter-spacing:.12em;color:{{ g.sub }};width:18px">{{ g.num }}</span>
+              <span style="font-family:Grandstander,sans-serif;font-weight:800;font-size:{{ g.size }}">{{ g.name }}</span>
+            </span>
+            <sc-if value="{{ g.active }}" hint-placeholder-val="{{ false }}">
+              <span style="padding-left:28px;font-size:14px;line-height:1.45;font-weight:600;color:#F0E2DA">{{ g.how }}</span>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+      </div>
+      <div style="padding:0 8px 8px 0">
+        <div style="position:relative;aspect-ratio:4/3;border:3px solid #1F3247;border-radius:22px;box-shadow:8px 8px 0 #F2C3BA;background:#fff;overflow:hidden">
+          <img src="{{ active4a.src }}" alt="{{ active4a.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="4b" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-weight:900;font-size:15px;background:#1F3247;color:#FFF9F4;border-radius:999px;padding:6px 14px">4b</span>
+    <span style="font-weight:800;font-size:18px">3a on mobile (390px): active row opens to show the game</span>
+  </div>
+  <div style="width:390px;box-sizing:border-box;background:#FBF2EE;padding:64px 20px">
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px">
+      <p style="margin:0;font-weight:900;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#4A5B70">The games</p>
+      <h2 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:34px;line-height:1.08">13 games, one routine.</h2>
+      <p style="margin:0;font-size:17px;line-height:1.55;font-weight:600;color:#4A5B70">Every game runs the same 20-trial round, and the child wins on the last one. Pick a favorite, or switch it up from session to session.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <sc-for list="{{ list4b }}" as="g" hint-placeholder-count="13">
+        <div style="display:flex;flex-direction:column;border-radius:16px;background:{{ g.bg }};transition:background-color 150ms ease-out">
+          <button onClick="{{ g.select }}" style="display:flex;align-items:center;gap:12px;min-height:48px;text-align:left;padding:0 14px;border:0;background:transparent;color:{{ g.fg }};cursor:pointer;font-family:inherit">
+            <span style="font-weight:900;font-size:11px;letter-spacing:.12em;color:{{ g.sub }};width:18px">{{ g.num }}</span>
+            <span style="flex:1;font-family:Grandstander,sans-serif;font-weight:800;font-size:{{ g.size }}">{{ g.name }}</span>
+            <span style="font-family:Grandstander,sans-serif;font-weight:900;font-size:18px;color:{{ g.sub }}">{{ g.mark }}</span>
+          </button>
+          <sc-if value="{{ g.active }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:12px;padding:0 14px 16px">
+              <span style="padding-left:30px;font-size:15px;line-height:1.45;font-weight:600;color:#F0E2DA">{{ g.how }}</span>
+              <div style="aspect-ratio:4/3;border:2px solid #FFF9F4;border-radius:14px;overflow:hidden;background:#fff">
+                <img src="{{ g.src }}" alt="{{ g.name }}" style="width:100%;height:100%;object-fit:cover;display:block">
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+</section>
+<section style="display:flex;flex-wrap:wrap;gap:80px;padding:80px;align-items:flex-start;border-bottom:2px dashed #E3CDC1">
+
+<div id="3a" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-weight:900;font-size:15px;background:#1F3247;color:#FFF9F4;border-radius:999px;padding:6px 14px">3a</span>
+    <span style="font-weight:800;font-size:18px">1a mirrored: list first, active row filled navy</span>
+  </div>
+  <div style="width:1280px;box-sizing:border-box;background:#FBF2EE;padding:96px 64px">
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:48px">
+      <p style="margin:0;font-weight:900;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#4A5B70">The games</p>
+      <h2 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:52px;line-height:1.05">13 games, one routine.</h2>
+      <p style="margin:0;font-size:19px;line-height:1.55;font-weight:600;color:#4A5B70;max-width:600px">Every game runs the same 20-trial round, and the child wins on the last one. Pick a favorite, or switch it up from session to session.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.75fr);gap:48px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <sc-for list="{{ list3a }}" as="g" hint-placeholder-count="13">
+          <button onClick="{{ g.select }}" style="display:flex;flex-direction:column;gap:4px;text-align:left;padding:{{ g.pad }};border:0;border-radius:14px;background:{{ g.bg }};color:{{ g.fg }};cursor:pointer;font-family:inherit;transition:background-color 150ms ease-out">
+            <span style="display:flex;align-items:baseline;gap:14px">
+              <span style="font-weight:900;font-size:12px;letter-spacing:.12em;color:{{ g.sub }};width:22px">{{ g.num }}</span>
+              <span style="font-family:Grandstander,sans-serif;font-weight:800;font-size:{{ g.size }}">{{ g.name }}</span>
+            </span>
+            <sc-if value="{{ g.active }}" hint-placeholder-val="{{ false }}">
+              <span style="padding-left:36px;font-size:16px;line-height:1.45;font-weight:600;color:#F0E2DA">{{ g.how }}</span>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+      <div style="padding:0 10px 10px 0;position:sticky;top:40px">
+        <div style="position:relative;aspect-ratio:4/3;border:3px solid #1F3247;border-radius:28px;box-shadow:10px 10px 0 #F2C3BA;background:#fff;overflow:hidden">
+          <img src="{{ active3a.src }}" alt="{{ active3a.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="3b" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-weight:900;font-size:15px;background:#1F3247;color:#FFF9F4;border-radius:999px;padding:6px 14px">3b</span>
+    <span style="font-weight:800;font-size:18px">1a with thumbnails in each row, active row lifts as a card</span>
+  </div>
+  <div style="width:1280px;box-sizing:border-box;background:#FBF2EE;padding:96px 64px">
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:48px">
+      <p style="margin:0;font-weight:900;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#4A5B70">The games</p>
+      <h2 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:52px;line-height:1.05">13 games, one routine.</h2>
+      <p style="margin:0;font-size:19px;line-height:1.55;font-weight:600;color:#4A5B70;max-width:600px">Every game runs the same 20-trial round, and the child wins on the last one. Pick a favorite, or switch it up from session to session.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:48px;align-items:start">
+      <div style="padding:0 10px 10px 0">
+        <div style="position:relative;aspect-ratio:4/3;border:3px solid #1F3247;border-radius:28px;box-shadow:10px 10px 0 #F2C3BA;background:#fff;overflow:hidden">
+          <img src="{{ active3b.src }}" alt="{{ active3b.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <sc-for list="{{ list3b }}" as="g" hint-placeholder-count="13">
+          <button onClick="{{ g.select }}" style="display:grid;grid-template-columns:{{ g.thumbW }} minmax(0,1fr);gap:14px;align-items:center;text-align:left;padding:6px;border:{{ g.border }};border-radius:14px;background:{{ g.bg }};box-shadow:{{ g.shadow }};cursor:pointer;font-family:inherit;color:#1F3247;transition:background-color 150ms ease-out" style-hover="background:#FFF9F4">
+            <span style="aspect-ratio:4/3;border-radius:8px;overflow:hidden;border:1.5px solid #E3CDC1;display:block">
+              <img src="{{ g.src }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block">
+            </span>
+            <span style="display:flex;flex-direction:column;gap:2px">
+              <span style="font-family:Grandstander,sans-serif;font-weight:800;font-size:{{ g.size }}">{{ g.name }}</span>
+              <sc-if value="{{ g.active }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:15px;line-height:1.4;font-weight:600;color:#4A5B70;text-wrap:pretty">{{ g.how }}</span>
+              </sc-if>
+            </span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="3c" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-weight:900;font-size:15px;background:#1F3247;color:#FFF9F4;border-radius:999px;padding:6px 14px">3c</span>
+    <span style="font-weight:800;font-size:18px">1a condensed: big game title on the right, names as chips beneath</span>
+  </div>
+  <div style="width:1280px;box-sizing:border-box;background:#FBF2EE;padding:96px 64px">
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:48px">
+      <p style="margin:0;font-weight:900;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#4A5B70">The games</p>
+      <h2 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:52px;line-height:1.05">13 games, one routine.</h2>
+      <p style="margin:0;font-size:19px;line-height:1.55;font-weight:600;color:#4A5B70;max-width:600px">Every game runs the same 20-trial round, and the child wins on the last one. Pick a favorite, or switch it up from session to session.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:48px;align-items:center">
+      <div style="padding:0 10px 10px 0">
+        <div style="position:relative;aspect-ratio:4/3;border:3px solid #1F3247;border-radius:28px;box-shadow:10px 10px 0 #F2C3BA;background:#fff;overflow:hidden">
+          <img src="{{ active3c.src }}" alt="{{ active3c.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <p style="margin:0;font-weight:900;font-size:13px;letter-spacing:.18em;color:#4A5B70">{{ active3c.count }}</p>
+        <h3 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:44px;line-height:1.05">{{ active3c.name }}</h3>
+        <p style="margin:0;font-size:21px;line-height:1.5;font-weight:600;color:#4A5B70;text-wrap:pretty;min-height:63px">{{ active3c.how }}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;padding-top:24px;border-top:1.5px solid #E3CDC1">
+          <sc-for list="{{ list3c }}" as="g" hint-placeholder-count="13">
+            <button onClick="{{ g.select }}" style="padding:8px 14px;border-radius:999px;border:1.5px solid {{ g.border }};background:{{ g.bg }};color:{{ g.fg }};font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;transition:border-color 150ms ease-out" style-hover="border-color:#1F3247">{{ g.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>
+<section style="display:flex;flex-wrap:wrap;gap:80px;padding:80px;align-items:flex-start;border-bottom:2px dashed #E3CDC1">
+
+<div id="2a" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-weight:900;font-size:15px;background:#1F3247;color:#FFF9F4;border-radius:999px;padding:6px 14px">2a</span>
+    <span style="font-weight:800;font-size:18px">Stage + thumbnail rail: thumbnails replace the dots</span>
+  </div>
+  <div style="width:1280px;box-sizing:border-box;background:#FBF2EE;padding:96px 64px">
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:48px;align-items:center;text-align:center">
+      <p style="margin:0;font-weight:900;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#4A5B70">The games</p>
+      <h2 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:52px;line-height:1.05">13 games, one routine.</h2>
+      <p style="margin:0;font-size:19px;line-height:1.55;font-weight:600;color:#4A5B70;max-width:600px;text-wrap:balance">Every game runs the same 20-trial round, and the child wins on the last one. Pick a favorite, or switch it up from session to session.</p>
+    </div>
+    <div style="max-width:900px;margin:0 auto;padding-right:10px">
+      <div style="position:relative;aspect-ratio:4/3;border:3px solid #1F3247;border-radius:28px;box-shadow:10px 10px 0 #F2C3BA;background:#fff;overflow:hidden">
+        <img src="{{ activeB.src }}" alt="{{ activeB.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+        <div style="position:absolute;left:20px;bottom:20px;display:flex;flex-direction:column;gap:4px;max-width:420px;background:#FFF9F4;border:1.5px solid #E3CDC1;border-radius:18px;padding:14px 20px">
+          <span style="font-weight:900;font-size:12px;letter-spacing:.18em;color:#4A5B70">{{ activeB.count }}</span>
+          <h3 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:28px">{{ activeB.name }}</h3>
+          <span style="font-size:16px;line-height:1.45;font-weight:600;color:#4A5B70">{{ activeB.how }}</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:10px;margin-top:36px">
+      <sc-for list="{{ listB }}" as="g" hint-placeholder-count="13">
+        <button onClick="{{ g.select }}" aria-label="Show {{ g.name }}" style="aspect-ratio:4/3;padding:0;border:{{ g.border }};border-radius:10px;overflow:hidden;background:#fff;cursor:pointer;opacity:{{ g.op }};transition:opacity 150ms ease-out" style-hover="opacity:1">
+          <img src="{{ g.src }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block">
+        </button>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+<div id="2b" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-weight:900;font-size:15px;background:#1F3247;color:#FFF9F4;border-radius:999px;padding:6px 14px">2b</span>
+    <span style="font-weight:800;font-size:18px">Scattered cards: playful leaning tiles that straighten on hover</span>
+  </div>
+  <div style="width:1280px;box-sizing:border-box;background:#FBF2EE;padding:96px 64px">
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:56px">
+      <p style="margin:0;font-weight:900;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#4A5B70">The games</p>
+      <h2 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:52px;line-height:1.05">13 games, one routine.</h2>
+      <p style="margin:0;font-size:19px;line-height:1.55;font-weight:600;color:#4A5B70;max-width:600px">Every game runs the same 20-trial round, and the child wins on the last one. Pick a favorite, or switch it up from session to session.</p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:36px 28px">
+      <sc-for list="{{ listD }}" as="g" hint-placeholder-count="13">
+        <div style="width:250px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;padding:10px 10px 16px;background:#FFF9F4;border:2px solid #1F3247;border-radius:20px;box-shadow:6px 6px 0 #F2C3BA;transform:rotate({{ g.rot }}) translateY({{ g.dy }});transition:transform 150ms ease-out" style-hover="transform:rotate(0deg) translateY(-4px)">
+          <div style="aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:#fff;border:1.5px solid #E3CDC1">
+            <img src="{{ g.src }}" alt="{{ g.name }}" style="width:100%;height:100%;object-fit:cover;display:block">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:2px;padding:0 6px">
+            <h3 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:20px">{{ g.name }}</h3>
+            <span style="font-size:14px;line-height:1.4;font-weight:600;color:#4A5B70;text-wrap:pretty">{{ g.how }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+<div id="2c" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-weight:900;font-size:15px;background:#1F3247;color:#FFF9F4;border-radius:999px;padding:6px 14px">2c</span>
+    <span style="font-weight:800;font-size:18px">Sticky intro + compact index: headline stays while the list scrolls</span>
+  </div>
+  <div style="width:1280px;box-sizing:border-box;background:#FBF2EE;padding:96px 64px;display:grid;grid-template-columns:minmax(0,0.8fr) minmax(0,1.2fr);gap:64px;align-items:start">
+    <div style="position:sticky;top:40px;display:flex;flex-direction:column;gap:14px">
+      <p style="margin:0;font-weight:900;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#4A5B70">The games</p>
+      <h2 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:52px;line-height:1.05">13 games, one routine.</h2>
+      <p style="margin:0;font-size:19px;line-height:1.55;font-weight:600;color:#4A5B70">Every game runs the same 20-trial round, and the child wins on the last one. Pick a favorite, or switch it up from session to session.</p>
+      <div style="margin-top:20px;padding:10px 10px 10px 0">
+        <div style="aspect-ratio:4/3;border:3px solid #1F3247;border-radius:24px;box-shadow:8px 8px 0 #F2C3BA;background:#fff;overflow:hidden">
+          <img src="{{ activeE.src }}" alt="{{ activeE.name }}" style="width:100%;height:100%;object-fit:cover;display:block">
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">
+      <sc-for list="{{ listE }}" as="g" hint-placeholder-count="13">
+        <button onMouseEnter="{{ g.select }}" onClick="{{ g.select }}" style="display:grid;grid-template-columns:112px minmax(0,1fr);gap:16px;align-items:center;text-align:left;padding:10px;border:1.5px solid {{ g.border }};border-radius:18px;background:#FFF9F4;cursor:pointer;font-family:inherit;color:#1F3247;transition:border-color 150ms ease-out">
+          <span style="aspect-ratio:4/3;border-radius:10px;overflow:hidden;border:1.5px solid #E3CDC1;display:block">
+            <img src="{{ g.src }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block">
+          </span>
+          <span style="display:flex;flex-direction:column;gap:2px">
+            <span style="font-family:Grandstander,sans-serif;font-weight:800;font-size:19px">{{ g.name }}</span>
+            <span style="font-size:14px;line-height:1.4;font-weight:600;color:#4A5B70;text-wrap:pretty">{{ g.how }}</span>
+          </span>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+</section>
+<section style="display:flex;flex-wrap:wrap;gap:80px;padding:80px;align-items:flex-start">
+
+<div id="1a" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-weight:900;font-size:15px;background:#1F3247;color:#FFF9F4;border-radius:999px;padding:6px 14px">1a</span>
+    <span style="font-weight:800;font-size:18px">Picker list: every game named, one playing</span>
+  </div>
+  <div style="width:1280px;box-sizing:border-box;background:#FBF2EE;padding:96px 64px">
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:48px">
+      <p style="margin:0;font-weight:900;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#4A5B70">The games</p>
+      <h2 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:52px;line-height:1.05">13 games, one routine.</h2>
+      <p style="margin:0;font-size:19px;line-height:1.55;font-weight:600;color:#4A5B70;max-width:600px">Every game runs the same 20-trial round, and the child wins on the last one. Pick a favorite, or switch it up from session to session.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:48px;align-items:start">
+      <div style="padding:0 10px 10px 0">
+        <div style="position:relative;aspect-ratio:4/3;border:3px solid #1F3247;border-radius:28px;box-shadow:10px 10px 0 #F2C3BA;background:#fff;overflow:hidden">
+          <img src="{{ activeA.src }}" alt="{{ activeA.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;border-top:1.5px solid #E3CDC1">
+        <sc-for list="{{ listA }}" as="g" hint-placeholder-count="13">
+          <button onClick="{{ g.select }}" style="display:flex;flex-direction:column;gap:4px;text-align:left;padding:{{ g.pad }};border:0;border-bottom:1.5px solid #E3CDC1;background:{{ g.bg }};cursor:pointer;font-family:inherit;color:#1F3247;transition:background-color 150ms ease-out" style-hover="background:#FFF9F4">
+            <span style="display:flex;align-items:baseline;gap:14px">
+              <span style="font-weight:900;font-size:12px;letter-spacing:.12em;color:#4A5B70;width:22px">{{ g.num }}</span>
+              <span style="font-family:Grandstander,sans-serif;font-weight:800;font-size:{{ g.size }}">{{ g.name }}</span>
+            </span>
+            <sc-if value="{{ g.active }}" hint-placeholder-val="{{ false }}">
+              <span style="padding-left:36px;font-size:16px;line-height:1.45;font-weight:600;color:#4A5B70">{{ g.how }}</span>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="1b" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-weight:900;font-size:15px;background:#1F3247;color:#FFF9F4;border-radius:999px;padding:6px 14px">1b</span>
+    <span style="font-weight:800;font-size:18px">Game wall: all 13 at a glance, default game featured</span>
+  </div>
+  <div style="width:1280px;box-sizing:border-box;background:#FBF2EE;padding:96px 64px">
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:end;margin-bottom:48px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <p style="margin:0;font-weight:900;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#4A5B70">The games</p>
+        <h2 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:52px;line-height:1.05">13 games, one routine.</h2>
+      </div>
+      <p style="margin:0;font-size:19px;line-height:1.55;font-weight:600;color:#4A5B70;max-width:600px">Every game runs the same 20-trial round, and the child wins on the last one. Pick a favorite, or switch it up from session to session.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 24px">
+      <div style="grid-column:span 2;grid-row:span 2;display:flex;flex-direction:column;gap:16px">
+        <div style="position:relative;aspect-ratio:4/3;border:3px solid #1F3247;border-radius:28px;box-shadow:10px 10px 0 #F2C3BA;background:#fff;overflow:hidden">
+          <img src="games/basketball.jpg" alt="Basketball" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+        </div>
+        <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:8px">
+          <h3 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:32px">Basketball</h3>
+          <span style="font-size:18px;font-weight:600;color:#4A5B70">Flick the ball into the hoop.</span>
+        </div>
+      </div>
+      <sc-for list="{{ rest }}" as="g" hint-placeholder-count="12">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="position:relative;aspect-ratio:4/3;border:2px solid #1F3247;border-radius:18px;box-shadow:6px 6px 0 #F2C3BA;background:#fff;overflow:hidden;transition:transform 150ms ease-out" style-hover="transform:translate(-2px,-2px)">
+            <img src="{{ g.src }}" alt="{{ g.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+            <h3 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:19px">{{ g.name }}</h3>
+            <span style="font-size:14px;line-height:1.4;font-weight:600;color:#4A5B70;text-wrap:pretty">{{ g.how }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+<div id="1c" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-weight:900;font-size:15px;background:#1F3247;color:#FFF9F4;border-radius:999px;padding:6px 14px">1c</span>
+    <span style="font-weight:800;font-size:18px">Filmstrip: the shared round on top, games scroll beneath</span>
+  </div>
+  <div style="width:1280px;box-sizing:border-box;background:#FFF9F4;border-top:1.5px solid #EBD9CF;border-bottom:1.5px solid #EBD9CF;padding:96px 0;overflow:hidden">
+    <div style="padding:0 64px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:48px;align-items:end;margin-bottom:40px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <p style="margin:0;font-weight:900;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#4A5B70">The games</p>
+        <h2 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:52px;line-height:1.05">13 games, one routine.</h2>
+        <p style="margin:0;font-size:19px;line-height:1.55;font-weight:600;color:#4A5B70;max-width:600px">Every game runs the same 20-trial round, and the child wins on the last one. Pick a favorite, or switch it up from session to session.</p>
+      </div>
+      <div style="display:flex;gap:12px">
+        <button onClick="{{ prevC }}" aria-label="Previous games" style="display:grid;place-items:center;width:52px;height:52px;border-radius:50%;border:1.5px solid #E3CDC1;background:#FBF2EE;color:#1F3247;font-family:Grandstander,sans-serif;font-weight:900;font-size:22px;cursor:pointer" style-hover="border-color:#1F3247">←</button>
+        <button onClick="{{ nextC }}" aria-label="Next games" style="display:grid;place-items:center;width:52px;height:52px;border-radius:50%;border:1.5px solid #E3CDC1;background:#FBF2EE;color:#1F3247;font-family:Grandstander,sans-serif;font-weight:900;font-size:22px;cursor:pointer" style-hover="border-color:#1F3247">→</button>
+      </div>
+    </div>
+    <div style="margin:0 64px 40px;display:flex;align-items:center;gap:16px;padding:16px 20px;background:#FBF2EE;border:1.5px solid #EBD9CF;border-radius:18px">
+      <span style="font-weight:900;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#4A5B70;white-space:nowrap">Every round</span>
+      <div style="flex:1;display:flex;align-items:center;gap:6px">
+        <sc-for list="{{ trials }}" as="t" hint-placeholder-count="19">
+          <span style="flex:1;height:10px;border-radius:999px;background:#E3CDC1"></span>
+        </sc-for>
+        <span style="flex:none;height:22px;padding:0 10px;border-radius:999px;background:#1F3247;color:#FFF9F4;font-weight:900;font-size:11px;letter-spacing:.12em;display:grid;place-items:center">WIN</span>
+      </div>
+      <span style="font-weight:800;font-size:15px;color:#1F3247;white-space:nowrap">20 trials</span>
+    </div>
+    <div ref="{{ stripRef }}" style="display:flex;gap:32px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:8px 64px 24px;scroll-padding:0 64px;scroll-behavior:smooth">
+      <sc-for list="{{ listC }}" as="g" hint-placeholder-count="4">
+        <article style="flex:none;width:400px;scroll-snap-align:start;display:flex;flex-direction:column;gap:16px">
+          <div style="position:relative;aspect-ratio:4/3;border:3px solid #1F3247;border-radius:24px;box-shadow:8px 8px 0 #F2C3BA;background:#fff;overflow:hidden">
+            <img src="{{ g.src }}" alt="{{ g.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;padding-right:12px">
+            <span style="font-weight:900;font-size:12px;letter-spacing:.18em;color:#4A5B70">{{ g.count }}</span>
+            <h3 style="margin:0;font-family:Grandstander,sans-serif;font-weight:800;font-size:26px">{{ g.name }}</h3>
+            <span style="font-size:17px;line-height:1.45;font-weight:600;color:#4A5B70;text-wrap:pretty">{{ g.how }}</span>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const GAMES = [
+  ['basketball','Basketball','Flick the ball into the hoop.'],
+  ['balloon-rainbow','Rainbow','Find the balloon the rainbow asks for.'],
+  ['balloon-friends','Free the friends','Pop the right balloon to free a friend.'],
+  ['feed','Feed the Animal','Feed Munch, or put it on the plate.'],
+  ['skyline','Skyline','Send the hero up to catch the bandits.'],
+  ['rain-garden','Rain Garden','Tap the farmer, the rain or the sun.'],
+  ['toy-train','Toy Train','Draw a track to pick up a friend, then take them for a ride or to the circus.'],
+  ['firefly-pond','Firefly Pond','Pull the frog back, aim, and let go.'],
+  ['explorer','Explorer','Tap the eyes to meet an animal friend.'],
+  ['runway','Dress the Guests','Pick what they wear.'],
+  ['photo-booth','Photo Booth','Pull the cord to take a photo.'],
+  ['pizza','Build a Pizza','Add the toppings and make four pizzas.'],
+  ['food-truck','Food Truck','Serve the friends from the food truck.'],
+].map(([id, name, how], i) => ({ id, name, how, src: `games/${id}.jpg`, num: String(i + 1).padStart(2, '0'), count: `${i + 1} / 13` }));
+
+class Component extends DCLogic {
+  state = { a: 0, b: 0, e: 0 };
+  stripRef = React.createRef();
+  scroll(dir) { const el = this.stripRef.current; if (el) el.scrollBy({ left: dir * 432 * 2 }); }
+  renderVals() {
+    const a = this.state.a;
+    return {
+      activeA: GAMES[a],
+      listA: GAMES.map((g, i) => ({ ...g, active: i === a, bg: i === a ? '#FFF9F4' : 'transparent', pad: i === a ? '16px 16px 18px' : '11px 16px', size: i === a ? '26px' : '19px', select: () => this.setState({ a: i }) })),
+      rest: GAMES.slice(1),
+      active4a: GAMES[this.state.x4a || 0],
+      list4a: GAMES.map((g, i) => { const on = i === (this.state.x4a || 0); return { ...g, active: on, bg: on ? '#1F3247' : 'transparent', fg: on ? '#FFF9F4' : '#1F3247', sub: on ? '#F0E2DA' : '#4A5B70', pad: on ? '12px 12px 14px' : '7px 12px', size: on ? '21px' : '16px', select: () => this.setState({ x4a: i }) }; }),
+      list4b: GAMES.map((g, i) => { const on = i === (this.state.x4b ?? 0); return { ...g, active: on, mark: on ? '−' : '+', bg: on ? '#1F3247' : 'transparent', fg: on ? '#FFF9F4' : '#1F3247', sub: on ? '#F0E2DA' : '#4A5B70', size: on ? '21px' : '17px', select: () => this.setState({ x4b: on ? -1 : i }) }; }),
+      active3a: GAMES[this.state.x3a || 0],
+      list3a: GAMES.map((g, i) => { const on = i === (this.state.x3a || 0); return { ...g, active: on, bg: on ? '#1F3247' : 'transparent', fg: on ? '#FFF9F4' : '#1F3247', sub: on ? '#F0E2DA' : '#4A5B70', pad: on ? '16px 16px 18px' : '9px 16px', size: on ? '26px' : '19px', select: () => this.setState({ x3a: i }) }; }),
+      active3b: GAMES[this.state.x3b || 0],
+      list3b: GAMES.map((g, i) => { const on = i === (this.state.x3b || 0); return { ...g, active: on, thumbW: on ? '120px' : '64px', border: on ? '2px solid #1F3247' : '2px solid transparent', bg: on ? '#FFF9F4' : 'transparent', shadow: on ? '5px 5px 0 #F2C3BA' : 'none', size: on ? '22px' : '17px', select: () => this.setState({ x3b: i }) }; }),
+      active3c: GAMES[this.state.x3c || 0],
+      list3c: GAMES.map((g, i) => { const on = i === (this.state.x3c || 0); return { ...g, border: on ? '#1F3247' : '#E3CDC1', bg: on ? '#1F3247' : '#FFF9F4', fg: on ? '#FFF9F4' : '#1F3247', select: () => this.setState({ x3c: i }) }; }),
+      activeB: GAMES[this.state.b],
+      listB: GAMES.map((g, i) => ({ ...g, border: i === this.state.b ? '3px solid #1F3247' : '1.5px solid #E3CDC1', op: i === this.state.b ? 1 : 0.7, select: () => this.setState({ b: i }) })),
+      listD: GAMES.map((g, i) => ({ ...g, rot: ['-2deg','1.5deg','-1deg','2deg','-1.5deg'][i % 5], dy: ['0px','10px','-4px','6px','2px'][i % 5] })),
+      activeE: GAMES[this.state.e],
+      listE: GAMES.map((g, i) => ({ ...g, border: i === this.state.e ? '#1F3247' : '#E3CDC1', select: () => this.setState({ e: i }) })),
+      listC: GAMES,
+      trials: Array.from({ length: 19 }, (_, i) => i),
+      stripRef: this.stripRef,
+      prevC: () => this.scroll(-1),
+      nextC: () => this.scroll(1),
+    };
+  }
+}
+</script>
+</body>
+</html>

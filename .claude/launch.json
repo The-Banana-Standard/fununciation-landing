@@ -4,14 +4,44 @@
     {
       "name": "site",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--", "--port", "4321"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "4321"
+      ],
       "port": 4321
     },
     {
       "name": "prototype",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-I", "-m", "http.server", "4400", "--bind", "127.0.0.1", "--directory", "design-handoff/prototype"],
+      "runtimeArgs": [
+        "-I",
+        "-m",
+        "http.server",
+        "4400",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "design-handoff/prototype"
+      ],
       "port": 4400
+    },
+    {
+      "name": "games-picker-prototype",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-I",
+        "-m",
+        "http.server",
+        "4401",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "design-handoff/games-picker"
+      ],
+      "port": 4401
     }
   ]
 }

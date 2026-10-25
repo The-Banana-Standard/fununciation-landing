@@ -1,0 +1,179 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import { withBase } from '../paths';
+
+interface Props {
+  /** The clip, as a path under public/ (e.g. "/media/games/basketball.mp4"). */
+  src: string;
+  /** A still of the clip's first moment. Shown until the clip plays, and instead of it when paused. */
+  poster: ImageMetadata;
+  /** Describes what the clip shows. */
+  alt: string;
+  /** Videos sharing a group share one pause choice (the games picker's do). */
+  group?: string;
+  widths?: number[];
+  sizes?: string;
+  class?: string;
+}
+
+const { src, poster, alt, group, widths, sizes, class: className } = Astro.props;
+---
+
+<div class:list={['loop-video', className]} data-loop-video data-group={group}>
+  <Image src={poster} alt={alt} widths={widths} sizes={sizes} class="loop-poster" />
+  <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1">
+    <source src={withBase(src)} type="video/mp4" />
+  </video>
+  <button class="loop-toggle" type="button" aria-label="Pause video" data-loop-toggle hidden>
+    <span class="loop-icon" aria-hidden="true"></span>
+  </button>
+</div>
+
+<script>
+  // Muted clips that loop while they're on screen. Each starts lazily (preload="none"), plays once
+  // at least 60% of it is visible, and pauses off screen. The button pauses every clip in its group;
+  // with reduced motion the clips start paused and show their still.
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const paused = new Map<string, boolean>(); // the viewer's choice, per group
+  const blocked = new Set<HTMLElement>(); // clips the browser refused to autoplay
+  const clips = [...document.querySelectorAll<HTMLElement>('[data-loop-video]')];
+
+  const groupOf = (clip: HTMLElement) => clip.dataset.group ?? `clip-${clips.indexOf(clip)}`;
+  const isPaused = (clip: HTMLElement) => paused.get(groupOf(clip)) ?? reduced;
+  const visible = new Set<HTMLElement>();
+
+  const render = (clip: HTMLElement) => {
+    const video = clip.querySelector('video')!;
+    const toggle = clip.querySelector<HTMLButtonElement>('[data-loop-toggle]')!;
+    const stop = isPaused(clip) || blocked.has(clip);
+    toggle.hidden = false;
+    toggle.setAttribute('aria-label', stop ? 'Play video' : 'Pause video');
+    toggle.dataset.state = stop ? 'paused' : 'playing';
+    if (!stop && visible.has(clip)) {
+      video.play().catch(() => {
+        // Autoplay refused (a background tab, low-power mode): the still stays and the button
+        // offers play. It isn't the viewer's choice, so it's retried when the tab comes back.
+        blocked.add(clip);
+        render(clip);
+      });
+    } else {
+      video.pause();
+    }
+  };
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    blocked.clear();
+    visible.forEach(render);
+  });
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const clip = entry.target as HTMLElement;
+        if (entry.intersectionRatio >= 0.6) {
+          visible.add(clip);
+          // Wait for it to settle, so a clip that is only passed over never starts loading.
+          setTimeout(() => visible.has(clip) && render(clip), 150);
+        } else {
+          visible.delete(clip);
+          render(clip);
+        }
+      }
+    },
+    { threshold: [0, 0.6] },
+  );
+
+  for (const clip of clips) {
+    const video = clip.querySelector('video')!;
+    video.addEventListener('playing', () => clip.classList.add('is-playing'));
+    clip.querySelector('[data-loop-toggle]')!.addEventListener('click', () => {
+      // A tap is a user gesture, so a clip the browser blocked can play now.
+      const play = blocked.has(clip) || isPaused(clip);
+      blocked.delete(clip);
+      paused.set(groupOf(clip), !play);
+      clips.filter((other) => groupOf(other) === groupOf(clip)).forEach(render);
+    });
+    observer.observe(clip);
+  }
+</script>
+
+<style>
+  .loop-video {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .loop-poster,
+  .loop-video video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* The still stays underneath; the clip fades in over it once it is actually playing. */
+  .loop-video video {
+    opacity: 0;
+    transition: opacity 150ms ease-out;
+  }
+
+  .loop-video.is-playing video {
+    opacity: 1;
+  }
+
+  .loop-toggle {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    background: var(--cream-surface);
+    color: var(--ink-navy);
+    cursor: pointer;
+    box-shadow: 0 2px 0 rgba(31, 50, 71, 0.15);
+  }
+
+  .loop-toggle[hidden] {
+    display: none;
+  }
+
+  .loop-toggle:hover {
+    border-color: var(--ink-navy);
+  }
+
+  /* Pause bars while playing, a play triangle while paused. */
+  .loop-icon {
+    width: 14px;
+    height: 16px;
+    box-sizing: border-box;
+    border-left: 5px solid currentColor;
+    border-right: 5px solid currentColor;
+  }
+
+  .loop-toggle[data-state='paused'] .loop-icon {
+    width: 0;
+    height: 0;
+    margin-left: 4px;
+    border-style: solid;
+    border-width: 9px 0 9px 15px;
+    border-color: transparent transparent transparent currentColor;
+  }
+
+  @media (max-width: 767px) {
+    .loop-toggle {
+      right: 10px;
+      bottom: 10px;
+      width: 40px;
+      height: 40px;
+    }
+  }
+</style>
